@@ -6,3 +6,6 @@ logging.getLogger("c")
 logging.getLogger("d")
 logging.getLogger("e")
 logging.getLogger("f")
+
+from time import sleep
+sleep(5)
