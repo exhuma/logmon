@@ -3,7 +3,7 @@ import os
 import logging
 import sys
 from time import sleep
-from Queue import Queue, Empty
+from Queue import Queue
 from optparse import OptionParser
 
 
@@ -69,18 +69,9 @@ def main():
     execute_script()
 
 
-def worker():
-    while True:
-        try:
-            item = QUEUE.get_nowait()
-            print item
-            QUEUE.task_done()
-        except Empty:
-            pass
-
-
 if __name__ == '__main__':
-    t = threading.Thread(target=worker)
+    import localui
+    t = threading.Thread(target=localui.main, args=(QUEUE,))
     t.daemon = True
     t.start()
     main()
