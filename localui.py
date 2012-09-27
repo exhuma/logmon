@@ -12,6 +12,19 @@ OP_CREATE = 1
 OP_REMOVE = 2
 
 
+class TkHandler(logging.Handler):
+
+    def __init__(self, widget, *args, **kwargs):
+        logging.Handler.__init__(self)
+        self.widget = widget
+        self.setLevel(logging.NOTSET)
+
+    def emit(self, record):
+        msg = "%s\n" % self.format(record)
+        self.widget.insert('1.0', msg)
+        self.flush()
+
+
 def parse_message(msg):
     if msg.startswith('create'):
         operation = OP_CREATE
@@ -42,8 +55,7 @@ class App(object):
                 self.logger_list.insert(tk.END, item)
                 op, payload = parse_message(item)
                 log = logging.getLogger(payload)
-                log.setLevel(logging.DEBUG)
-                log.addHandler(logging.StreamHandler())
+                log.addHandler(TkHandler(app.logwindow))
                 log.info('Attached looger {0} to monitor.'.format(payload))
                 queue.task_done()
             except Empty:

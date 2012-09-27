@@ -2,7 +2,6 @@ import threading
 import os
 import logging
 import sys
-from time import sleep
 from Queue import Queue
 from optparse import OptionParser
 
@@ -27,7 +26,6 @@ class Monitor(threading.Thread):
             for logger in self.known_loggers:
                 if logger not in loggers:
                     QUEUE.put('remove {}'.format(logger.name))
-            sleep(1)
 
 
 def run_monitor():
@@ -70,6 +68,7 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     import localui
     t = threading.Thread(target=localui.main, args=(QUEUE,))
     t.daemon = True
