@@ -75,15 +75,15 @@ def execute_script(options, args):
     exec code in globs, None
 
 
-def run_ui(options, args):
-    if options.ui not in ('tk', ):
-        print "{0} is an unsupported UI!".format(options.ui)
+def run_ui(ui, daemonize):
+    if ui not in ('tk', ):
+        print "{0} is an unsupported UI!".format(ui)
         sys.exit(2)
 
-    if options.ui.lower().strip() == 'tk':
+    if ui == 'tk':
         import localui
         t = threading.Thread(target=localui.main, args=(QUEUE,))
-        if options.daemonize:
+        if daemonize:
             t.daemon = True
         t.start()
 
@@ -91,7 +91,7 @@ def run_ui(options, args):
 def main():
     options, args = parse_options()
     run_monitor()
-    run_ui(options, args)
+    run_ui(options.ui, options.daemonize)
     execute_script(options, args)
 
 
