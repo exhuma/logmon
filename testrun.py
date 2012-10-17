@@ -8,10 +8,10 @@ class MyCmd(Cmd):
 
     def do_EOF(self, line):
         LOG.warning("Exiting")
-        print ""
         sys.exit(0)
 
     def do_hello(self, line):
+        logging.getLogger('internal.logger').debug('bla')
         LOG.info("Hello")
 
     do_exit = do_EOF
