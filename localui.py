@@ -66,8 +66,8 @@ class App(object):
         while True:
             try:
                 item = queue.get_nowait()
-                self.logger_list.insert(tk.END, item)
                 op, payload = parse_message(item)
+                self.logger_list.insert(tk.END, payload)
                 # TODO: Handle other operators
                 log = logging.getLogger(payload)
                 log.addHandler(TkHandler(app.logwindow))
