@@ -10,6 +10,7 @@ from Queue import Empty
 
 OP_CREATE = 1
 OP_REMOVE = 2
+LOG = logging.getLogger(__name__)
 
 
 class TkHandler(logging.Handler):
@@ -39,6 +40,9 @@ class App(object):
 
     def __init__(self, master, queue):
 
+        self.current = None
+        self.master = master
+
         frame = tk.Frame(master)
         frame.pack()
 
@@ -50,6 +54,18 @@ class App(object):
         scrollbar.config(command=self.logger_list.yview)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.logger_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+
+        self.poll()
+
+    def list_has_changed(self, new_selection):
+        LOG.debug('New list selection: {0}'.format(new_selection))
+
+    def poll(self):
+        now = self.logger_list.curselection()
+        if now != self.current:
+            self.list_has_changed(now)
+            self.current = now
+        self.master.after(250, self.poll)
 
 
     def worker(self, app, queue):
