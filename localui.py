@@ -45,15 +45,30 @@ class App(object):
         self.logwindow = tk.Text(frame)
         self.logwindow.pack(side=tk.LEFT)
 
-        self.logger_list = tk.Listbox(frame)
-        self.logger_list.pack(side=tk.RIGHT)
+        scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL)
+        self.logger_list = tk.Listbox(frame, yscrollcommand=scrollbar.set)
+        scrollbar.config(command=self.logger_list.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.logger_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+
 
     def worker(self, app, queue):
+        """
+        Monitors the message queue, and as soon as something is added to that
+        list, handles the message.
+
+        :param app: A reference to the running application.
+        :param queue: A message queue.
+        """
+
+        # TODO: Why am I passing the 'app' variable? It should be accessible
+        # TODO:     as self?
         while True:
             try:
                 item = queue.get_nowait()
                 self.logger_list.insert(tk.END, item)
                 op, payload = parse_message(item)
+                # TODO: Handle other operators
                 log = logging.getLogger(payload)
                 log.addHandler(TkHandler(app.logwindow))
                 log.info('Attached logger {0} to monitor.'.format(payload))
