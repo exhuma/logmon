@@ -19,7 +19,8 @@ class Monitor(threading.Thread):
         while True:
             loggers = logging.getLogger().manager.loggerDict.values()
             for logger in loggers:
-                if logger not in self.known_loggers:
+                if (logger not in self.known_loggers and
+                        not isinstance(logger, logging.PlaceHolder)):
                     QUEUE.put('create {}'.format(logger.name))
                     self.known_loggers.add(logger)
 
