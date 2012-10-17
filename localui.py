@@ -56,7 +56,7 @@ class App(object):
                 op, payload = parse_message(item)
                 log = logging.getLogger(payload)
                 log.addHandler(TkHandler(app.logwindow))
-                log.info('Attached looger {0} to monitor.'.format(payload))
+                log.info('Attached logger {0} to monitor.'.format(payload))
                 queue.task_done()
             except Empty:
                 pass
